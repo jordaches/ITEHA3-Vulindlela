@@ -12,6 +12,8 @@ public class BookingDbContext : DbContext
     public DbSet<Appointment> Appointments => Set<Appointment>();
     public DbSet<CitizenAccount> Citizens => Set<CitizenAccount>();
 
+    public DbSet<NotificationOutbox> Outbox => Set<NotificationOutbox>();
+
     protected override void OnModelCreating(ModelBuilder b)
     {
         b.Entity<Branch>(e =>
@@ -54,6 +56,19 @@ public class BookingDbContext : DbContext
         {
             e.Property(x => x.IdNumber).HasMaxLength(13).IsRequired();
             e.HasIndex(x => x.IdNumber).IsUnique();
+        });
+
+        b.Entity<NotificationOutbox>(e =>
+        {
+            e.Property(x => x.ServiceType).HasMaxLength(32).IsRequired();
+            e.Property(x => x.LastError).HasMaxLength(1024);
+
+            e.HasOne(x => x.Appointment).WithMany()
+             .HasForeignKey(x => x.AppointmentId)
+             .OnDelete(DeleteBehavior.Cascade);
+
+            // Indexes for the dispatcher's polling query.
+            e.HasIndex(x => new { x.SentAtUtc, x.NextAttemptAtUtc });
         });
     }
 }

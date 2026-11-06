@@ -66,18 +66,28 @@ namespace Vulindlela.Booking.Api.Business
                 CreatedAtUtc = _clock.UtcNow
             };
 
-            // ---- The act. No "is it taken?" check. The database decides. ----
+            var notification = new NotificationOutbox
+            {
+                Kind = NotificationKind.AppointmentCreated,
+                Appointment = appointment,               // EF sets AppointmentId on save
+                CitizenAccountId = citizen.Id,
+                ServiceType = slot.ServiceType,
+                CreatedAtUtc = _clock.UtcNow,
+                NextAttemptAtUtc = _clock.UtcNow,        // immediately due
+                AttemptCount = 0
+            };
+
             try
             {
-                await _appointments.AddAsync(appointment, ct);
+                await _appointments.AddWithNotificationAsync(appointment, notification, ct);
             }
             catch (DuplicateSlotException)
             {
-                return BookingResult.Conflict(
-                    "That slot was taken moments ago. Please choose another.");
+                return BookingResult.Conflict("That slot was taken moments ago. Please choose another.");
             }
 
             return BookingResult.Success(ToDto(appointment, slot));
+            
         }
 
         public async Task<AppointmentDto?> GetAsync(int id, CancellationToken ct)

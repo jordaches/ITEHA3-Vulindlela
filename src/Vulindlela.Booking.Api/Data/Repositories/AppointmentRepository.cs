@@ -53,6 +53,27 @@ namespace Vulindlela.Booking.Api.Data.Repositories
         // collision; both mean "this insert would break a unique index".
         private static bool IsUniqueViolation(DbUpdateException ex) =>
             ex.InnerException is SqliteException { SqliteErrorCode: 19 };
+
+        public async Task AddWithNotificationAsync(
+            Appointment appointment,
+            NotificationOutbox notification,
+            CancellationToken ct)
+        {
+            _db.Appointments.Add(appointment);
+            _db.Outbox.Add(notification);
+
+            try
+            {
+                await _db.SaveChangesAsync(ct);
+            }
+            catch (DbUpdateException ex) when (IsUniqueViolation(ex))
+            {
+                // Leave the context usable; detach everything we added.
+                _db.Entry(appointment).State = EntityState.Detached;
+                _db.Entry(notification).State = EntityState.Detached;
+                throw new DuplicateSlotException(appointment.SlotId);
+            }
+        }
     }
 
 }
