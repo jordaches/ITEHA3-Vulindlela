@@ -1,4 +1,4 @@
-@Vulindlela.Booking.Api_HostAddress = http://localhost:5085
+@Vulindlela.Booking.Api_HostAddress = http://localhost:5104
 
 GET {{Vulindlela.Booking.Api_HostAddress}}/weatherforecast/
 Accept: application/json

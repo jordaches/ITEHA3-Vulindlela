@@ -1,4 +1,4 @@
-﻿namespace Vulindlela.Booking.Tests;
+namespace Vulindlela.Booking.Tests;
 
 public class UnitTest1
 {
