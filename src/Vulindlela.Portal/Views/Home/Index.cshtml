@@ -3,6 +3,13 @@
 }
 
 <div class="text-center mt-5">
+    @if (ViewData["BookingDown"] as bool? == true)
+    {
+        <div class="alert alert-danger mb-4">
+            <strong>System Offline:</strong> The Booking Service is currently unreachable. You cannot sign in or book appointments at this time.
+        </div>
+    }
+
     <h1 class="display-5">Vulindlela</h1>
     <p class="lead">Book a counter slot and submit your documents before you travel.</p>
 

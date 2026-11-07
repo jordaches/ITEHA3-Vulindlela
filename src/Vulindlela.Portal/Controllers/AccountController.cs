@@ -21,9 +21,10 @@ public class AccountController : Controller
     }
 
     [HttpGet]
-    public IActionResult SignIn(string? returnUrl = null)
+    public async Task<IActionResult> SignIn(string? returnUrl = null, CancellationToken ct = default)
     {
         ViewData["ReturnUrl"] = returnUrl;
+        ViewData["BookingDown"] = !await _booking.IsAvailableAsync(ct);
         return View();
     }
 
@@ -31,25 +32,35 @@ public class AccountController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> SignIn(string idNumber, string password, string? returnUrl, CancellationToken ct)
     {
-        var result = await _booking.VerifyPasswordAsync(idNumber, password, ct);
-        if (result is null)
+        try
         {
-            ModelState.AddModelError("", "Invalid ID number or password.");
+            var result = await _booking.VerifyPasswordAsync(idNumber, password, ct);
+            if (result is null)
+            {
+                ModelState.AddModelError("", "Invalid ID number or password.");
+                return View();
+            }
+
+            var claims = new List<Claim>
+            {
+                new(ClaimTypes.NameIdentifier, result.CitizenId.ToString()),
+                new(ClaimTypes.Name, result.FullName),
+                new(ClaimTypes.Role, result.Role)
+            };
+            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
+
+            return RedirectToLocal(returnUrl);
+        }
+        catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException)
+        {
+            ModelState.AddModelError("", "The Booking Service is currently offline. Please try again later.");
+            ViewData["BookingDown"] = true;
             return View();
         }
-
-        var claims = new List<Claim>
-        {
-            new(ClaimTypes.NameIdentifier, result.CitizenId.ToString()),
-            new(ClaimTypes.Name, result.FullName),
-            new(ClaimTypes.Role, result.Role)
-        };
-        var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-        await HttpContext.SignInAsync(
-            CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
-
-        return RedirectToLocal(returnUrl);
     }
+    
 
     [HttpPost]
     [ValidateAntiForgeryToken]

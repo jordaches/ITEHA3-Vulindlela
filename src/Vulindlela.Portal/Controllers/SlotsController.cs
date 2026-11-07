@@ -14,8 +14,18 @@ public class SlotsController : Controller
     public SlotsController(IBookingApiClient booking) => _booking = booking;
 
     [HttpGet]
-    public async Task<IActionResult> Index(CancellationToken ct) =>
-        View(await _booking.GetBranchesAsync(ct));
+    public async Task<IActionResult> Index(CancellationToken ct)
+    {
+        try
+        {
+            return View(await _booking.GetBranchesAsync(ct));
+        }
+        catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException)
+        {
+            ViewData["BookingDown"] = true;
+            return View(new List<BranchDto>());
+        }
+    }
 
     [HttpGet]
     public async Task<IActionResult> Browse(

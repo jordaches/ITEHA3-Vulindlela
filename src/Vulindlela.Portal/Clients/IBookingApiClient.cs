@@ -14,4 +14,6 @@ public interface IBookingApiClient
     Task<IReadOnlyList<AccessLogEntryDto>> GetAccessLogAsync(int citizenId, CancellationToken ct);
 
     Task<CitizenDto?> GetCitizenByIdNumberAsync(string idNumber, CancellationToken ct);
+
+    Task<bool> IsAvailableAsync(CancellationToken ct);
 }

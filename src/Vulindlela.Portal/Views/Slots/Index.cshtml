@@ -11,7 +11,12 @@
 {
     <div class="alert alert-warning">@err</div>
 }
-
+@if (ViewData["BookingDown"] as bool? == true)
+{
+    <div class="alert alert-danger">
+        <strong>System Offline:</strong> We cannot fetch branch data right now. Please try again later.
+    </div>
+}
 <form method="get" asp-action="Browse" class="row g-3 mb-4 col-md-8">
     <div class="col-md-4">
         <label class="form-label">Branch</label>

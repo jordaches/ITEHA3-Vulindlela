@@ -75,4 +75,17 @@ public sealed class BookingApiClient : IBookingApiClient
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<CitizenDto>(cancellationToken: ct);
     }
+
+    public async Task<bool> IsAvailableAsync(CancellationToken ct)
+    {
+        try
+        {
+            var response = await _http.GetAsync("api/branches", ct);
+            return response.IsSuccessStatusCode;
+        }
+        catch
+        {
+            return false; // Connection refused, timeout, etc.
+        }
+    }
 }

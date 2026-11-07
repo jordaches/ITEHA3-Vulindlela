@@ -33,7 +33,7 @@ public class AuthTests
         }
 
         await using var check = db.CreateContext();
-        var citizen = await check.Citizens.SingleAsync(c => c.IdNumber == "9001015800081");
+        var citizen = await check.Citizens.SingleAsync(c => c.IdNumber == "8901015800081");
 
         Assert.Equal("Citizen", citizen.Role);
         Assert.NotNull(citizen.PasswordHash);

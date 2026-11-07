@@ -3,7 +3,12 @@
 }
 
 <h1>Sign in</h1>
-
+@if (ViewData["BookingDown"] as bool? == true)
+{
+    <div class="alert alert-danger">
+        <strong>System Offline:</strong> The Booking Service is unreachable. Sign-in is temporarily disabled.
+    </div>
+}
 <form method="post" asp-action="SignIn" class="col-md-4">
     @Html.AntiForgeryToken()
     <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />

@@ -1,5 +1,6 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
+using Vulindlela.Portal.Clients;
 using Vulindlela.Portal.Models;
 
 namespace Vulindlela.Portal.Controllers;
@@ -8,13 +9,17 @@ public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
 
-    public HomeController(ILogger<HomeController> logger)
+    private readonly IBookingApiClient _booking;
+
+    public HomeController(ILogger<HomeController> logger, IBookingApiClient booking)
     {
         _logger = logger;
+        _booking = booking;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index(CancellationToken ct)
     {
+        ViewData["BookingDown"] = !await _booking.IsAvailableAsync(ct);
         return View();
     }
 
