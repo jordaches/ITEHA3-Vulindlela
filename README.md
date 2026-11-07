@@ -64,7 +64,6 @@ dotnet run --project src/Vulindlela.Portal          # Starts on http://localhost
 ```
 4. Open http://localhost:9001 in your browser.
 
-
 ## Seeded Demonstration Accounts
 The databases are created and seeded automatically on the first run.
 
