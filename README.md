@@ -57,6 +57,7 @@ create appsettings.Development.json in Booking.Api, Clearance.Api, and Portal wi
 ```
 3. Run the three projects in three separate terminal windows:
 ```powershell
+#Powershell
 dotnet run --project src/Vulindlela.Booking.Api     # Starts on http://localhost:9002
 dotnet run --project src/Vulindlela.Clearance.Api   # Starts on http://localhost:9003
 dotnet run --project src/Vulindlela.Portal          # Starts on http://localhost:9001
