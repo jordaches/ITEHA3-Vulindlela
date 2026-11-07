@@ -50,9 +50,13 @@ public static class BookingSeeder
         db.Slots.AddRange(slots);
 
         db.Citizens.AddRange(
-            Account(hasher, "Thandi Mokoena", "9001015800081", "0821110001", "1P@ssword", "Citizen"),
-            Account(hasher, "Sipho Ndlovu", "8802025800082", "0821110002", "1P@ssword", "Citizen"),
-            Account(hasher, "Anele Dlamini", "9203035800083", "0821110003", "1P@ssword", "Citizen"),
+            Account(hasher, "Queen Moroka", "8901015800081", "0821110001", "1P@ssword", "Citizen"),
+            Account(hasher, "Jack Mabaso", "8802025800082", "0821110002", "1P@ssword", "Citizen"),
+            Account(hasher, "Sibusiso Dlomo", "8303035800083", "0821110003", "1P@ssword", "Citizen"),
+            Account(hasher, "Kenny Mashaba", "8703035800084", "0821110003", "1P@ssword", "Citizen"),
+            Account(hasher, "Georgie Zamdela", "9203035800085", "0821110003", "Official123!", "Official"),
+            Account(hasher, "Rajesh Kumar", "9203035802285", "0821110003", "Official123!", "Official"),
+            Account(hasher, "Agnes Matabane", "9203035809886", "0821110003", "Official123!", "Official"),
             Account(hasher, "Demo Official", "7001015800080", "0821110099", "Official123!", "Official"));
 
         db.SaveChanges();
