@@ -43,12 +43,14 @@ namespace Vulindlela.Clearance.Api.Business
             var status = new ClearanceStatus
             {
                 AppointmentId = req.AppointmentId,
+                CitizenAccountId = req.CitizenAccountId,     // NEW
                 ServiceType = req.ServiceType,
                 State = state,
                 CreatedAtUtc = _clock.UtcNow,
                 UpdatedAtUtc = _clock.UtcNow,
                 VerifiedAtUtc = state == ClearanceState.NotRequired ? _clock.UtcNow : null
             };
+
             _statuses.Add(status);
             await _uow.SaveChangesAsync(ct);
             return ToDto(status);
@@ -69,6 +71,7 @@ namespace Vulindlela.Clearance.Api.Business
                 status = new ClearanceStatus
                 {
                     AppointmentId = req.AppointmentId,
+                    CitizenAccountId = req.CitizenAccountId,
                     ServiceType = req.ServiceType,
                     State = state,
                     CreatedAtUtc = _clock.UtcNow,
@@ -118,5 +121,11 @@ namespace Vulindlela.Clearance.Api.Business
             s.MissingDocuments.Select(m => new MissingDocumentDto(m.DocumentType, m.Reason)).ToList(),
             s.VerifiedAtUtc,
             s.UpdatedAtUtc);
+
+        public async Task<(int CitizenAccountId, string State)?> GetStatusForAuthorisationAsync(int appointmentId, CancellationToken ct)
+        {
+            var status = await _statuses.GetByAppointmentIdAsync(appointmentId, ct);
+            return status is null ? null : (status.CitizenAccountId, status.State.ToString());
+        }
     }
 }

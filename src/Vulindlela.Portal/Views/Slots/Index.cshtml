@@ -1,0 +1,44 @@
+﻿@model IReadOnlyList<Vulindlela.Shared.Contracts.BranchDto>
+@{
+    ViewData["Title"] = "Branches";
+}
+
+<h1>Branches</h1>
+
+@if (TempData["Error"] is string err)
+{
+    <div class="alert alert-warning">@err</div>
+}
+
+<form method="get" asp-action="Browse" class="row g-3 mb-4 col-md-8">
+    <div class="col-md-4">
+        <label class="form-label">Branch</label>
+        <select name="branchId" class="form-select" required>
+            @foreach (var b in Model)
+            {
+                <option value="@b.Id">@b.Name (@b.City)</option>
+            }
+        </select>
+    </div>
+    <div class="col-md-3">
+        <label class="form-label">Date</label>
+        <input type="date" name="date" class="form-control" required
+               value="@DateTime.UtcNow.AddDays(7).ToString("yyyy-MM-dd")" />
+    </div>
+    <div class="col-md-3">
+        <label class="form-label">Service</label>
+        <select name="serviceType" class="form-select">
+            <option value="">Any</option>
+            <option value="PASSPORT">Passport</option>
+            <option value="PASSPORT_URGENT">Passport (urgent)</option>
+            <option value="ID_APPLICATION">ID application</option>
+            <option value="ID_COLLECTION">ID collection</option>
+            <option value="BIRTH_CERT">Birth certificate</option>
+            <option value="MARRIAGE_CERT">Marriage certificate</option>
+            <option value="DEATH_CERT">Death certificate</option>
+        </select>
+    </div>
+    <div class="col-md-2 d-flex align-items-end">
+        <button class="btn btn-primary w-100">Search</button>
+    </div>
+</form>

@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Vulindlela.Booking.Api.Business.Interfaces;
 using Vulindlela.Shared.Contracts;
 
 namespace Vulindlela.Booking.Api.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/branches")]
     public class BranchesController : ControllerBase

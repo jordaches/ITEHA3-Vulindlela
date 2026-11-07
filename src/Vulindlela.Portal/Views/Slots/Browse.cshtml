@@ -1,0 +1,59 @@
+﻿@model Vulindlela.Portal.ViewModels.BrowseSlotsViewModel
+@{
+    ViewData["Title"] = "Slots";
+}
+
+<h1>@Model.BranchName — @Model.Date</h1>
+@if (!string.IsNullOrEmpty(Model.ServiceType))
+{
+    <p class="text-muted">Filtered to @Model.ServiceType</p>
+}
+
+@if (TempData["Error"] is string err)
+{
+    <div class="alert alert-danger">@err</div>
+}
+
+@if (Model.Slots.Count == 0)
+{
+    <p>No slots for that selection.</p>
+}
+else
+{
+    <table class="table table-sm">
+        <thead><tr><th>Time (UTC)</th><th>Service</th><th>Status</th><th></th></tr></thead>
+        <tbody>
+            @foreach (var slot in Model.Slots)
+            {
+                <tr>
+                    <td>@slot.StartsAtUtc.ToString("u")</td>
+                    <td>@slot.ServiceType</td>
+                    <td>
+                        @if (slot.IsAvailable)
+                        {
+                            <span class="text-success">Available</span>
+                        }
+                        else
+                        {
+
+                            <span class="text-muted">Taken</span>
+                        }
+                    </td>
+                    <td>
+                        @if (slot.IsAvailable)
+                        {
+                            <form method="post" asp-action="Book" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="slotId" value="@slot.Id" />
+                                <input type="hidden" name="serviceType" value="@slot.ServiceType" />
+                                <input type="hidden" name="branchId" value="@Model.BranchId" />
+                                <input type="hidden" name="date" value="@Model.Date" />
+                                <button class="btn btn-sm btn-primary">Book</button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

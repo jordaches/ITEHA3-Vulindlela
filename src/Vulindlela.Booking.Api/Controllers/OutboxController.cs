@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Vulindlela.Booking.Api.Data;
 
 namespace Vulindlela.Booking.Api.Controllers;
 
+[Authorize(Roles = "System")]
 [ApiController]
 [Route("api/outbox")]
 public class OutboxController : ControllerBase

@@ -26,9 +26,8 @@ public class ClearanceDbContext : DbContext
         b.Entity<ClearanceStatus>(e =>
         {
             e.Property(x => x.ServiceType).HasMaxLength(32).IsRequired();
-            // One clearance record per appointment. Resubmissions replace the
-            // documents on the current submission, not the status row.
             e.HasIndex(x => x.AppointmentId).IsUnique();
+            e.HasIndex(x => x.CitizenAccountId);        // for the authorisation lookup
         });
 
         b.Entity<Submission>(e =>

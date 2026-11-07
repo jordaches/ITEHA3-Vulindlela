@@ -36,11 +36,10 @@ public class BookingDbContext : DbContext
             e.Property(x => x.Fee).HasColumnType("decimal(10,2)");
             e.HasIndex(x => x.Reference).IsUnique();
 
-            // ============================================================
             //  THE GUARANTEE. A slot can hold at most one appointment.
             //  Enforced by the database. Not by application code.
             //  Two concurrent inserts both reach SQLite; exactly one wins.
-            // ============================================================
+
             e.HasIndex(x => x.SlotId).IsUnique();
 
             e.HasOne(x => x.Slot).WithOne(x => x.Appointment)
@@ -55,6 +54,7 @@ public class BookingDbContext : DbContext
         b.Entity<CitizenAccount>(e =>
         {
             e.Property(x => x.IdNumber).HasMaxLength(13).IsRequired();
+            e.Property(x => x.Role).HasMaxLength(16).IsRequired();
             e.HasIndex(x => x.IdNumber).IsUnique();
         });
 

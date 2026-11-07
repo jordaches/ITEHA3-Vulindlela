@@ -1,8 +1,25 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Vulindlela";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="text-center mt-5">
+    <h1 class="display-5">Vulindlela</h1>
+    <p class="lead">Book a counter slot and submit your documents before you travel.</p>
+
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <p>
+            Signed in as <strong>@User.Identity.Name</strong>
+            @if (User.IsInRole("Official"))
+            {
+                <span class="badge bg-warning text-dark">Official</span>
+            }
+        </p>
+        <a class="btn btn-primary" asp-controller="Slots" asp-action="Index">Browse slots</a>
+        <a class="btn btn-outline-secondary" asp-controller="Appointments" asp-action="Mine">My appointments</a>
+    }
+    else
+    {
+        <a class="btn btn-primary" asp-controller="Account" asp-action="SignIn">Sign in</a>
+    }
 </div>

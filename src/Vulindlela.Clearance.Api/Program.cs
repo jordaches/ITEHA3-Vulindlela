@@ -6,6 +6,7 @@ using Vulindlela.Clearance.Api.Business.Workers;
 using Vulindlela.Clearance.Api.Data;
 using Vulindlela.Clearance.Api.Data.Repositories;
 using Vulindlela.Clearance.Api.Data.Seed;
+using Vulindlela.Shared.Security;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,9 +31,15 @@ builder.Services.AddScoped<ISubmissionService, SubmissionService>();
 builder.Services.AddSingleton<IDocumentQueue, ChannelDocumentQueue>();
 builder.Services.AddHostedService<ClearanceWorker>();
 
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddPortalHeaderSecurity(builder.Configuration);
+
 builder.Services.AddControllers();
 
 var app = builder.Build();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 using (var scope = app.Services.CreateScope())
 {

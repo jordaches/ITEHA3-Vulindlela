@@ -1,0 +1,94 @@
+﻿@model Vulindlela.Portal.ViewModels.MyAppointmentsViewModel
+@{
+    ViewData["Title"] = "My appointments";
+}
+
+<h1>Appointments for @Model.OwnerName</h1>
+
+@if (TempData["Success"] is string ok)
+{
+    <div class="alert alert-success">@ok</div>
+}
+
+@if (Model.BookingError is not null)
+{
+    <div class="alert alert-warning">
+        <strong>@Model.BookingError</strong>
+        Please try again shortly.
+    </div>
+}
+
+@if (Model.ClearanceError is not null)
+{
+    <div class="alert alert-warning">
+        <strong>@Model.ClearanceError</strong>
+        Your bookings are shown below. Document clearance will return when the service is available.
+    </div>
+}
+
+@if (User.IsInRole("Official"))
+{
+    <form method="get" asp-action="ForCitizen" class="row g-2 mb-4 col-md-6">
+        <div class="col-md-6">
+            <input type="number" name="id" class="form-control" placeholder="Citizen id" required />
+        </div>
+        <div class="col-md-6">
+            <button class="btn btn-outline-secondary">View another citizen's appointments</button>
+        </div>
+    </form>
+}
+
+@if (Model.Appointments.Count == 0)
+{
+    <p>You have no appointments.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Reference</th>
+                <th>Branch</th>
+                <th>Date (UTC)</th>
+                <th>Service</th>
+                <th>Fee</th>
+                <th>Clearance</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var a in Model.Appointments)
+            {
+                <tr>
+                    <td>@a.Reference</td>
+                    <td>@a.BranchName</td>
+                    <td>@a.StartsAtUtc.ToString("u")</td>
+                    <td>@a.ServiceType</td>
+                    <td>R@(a.Fee.ToString("0.00"))</td>
+                    <td>
+                        @if (Model.ClearanceError is not null)
+                        {
+                            <span class="text-muted">Unavailable</span>
+                        }
+                        else if (Model.Clearance.TryGetValue(a.Id, out var status))
+                        {
+                            <span>@status.State</span>
+                            @if (status.MissingDocuments.Count > 0)
+                            {
+                                <ul class="list-unstyled small text-danger mt-1">
+                                    @foreach (var m in status.MissingDocuments)
+                                    {
+                                        <li>@m.DocumentType — @m.Reason</li>
+                                    }
+                                </ul>
+                            }
+                        }
+                        else
+                        {
+                            <span class="text-muted">Not registered</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

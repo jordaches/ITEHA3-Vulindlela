@@ -1,4 +1,5 @@
-﻿using Vulindlela.Booking.Api.Data.Entities;
+﻿using Vulindlela.Booking.Api.Business.Security;
+using Vulindlela.Booking.Api.Data.Entities;
 
 namespace Vulindlela.Booking.Api.Data.Seed;
 
@@ -15,9 +16,9 @@ public static class BookingSeeder
         new(9, 0, 0), new(11, 0, 0), new(14, 0, 0)
     };
 
-    public static void Seed(BookingDbContext db)
+    public static void Seed(BookingDbContext db, IPasswordHasher hasher)
     {
-        if (db.Branches.Any()) return;   // ensure safe on every start-up
+        if (db.Branches.Any()) return;
 
         var branches = new List<Branch>
         {
@@ -28,17 +29,14 @@ public static class BookingSeeder
         db.Branches.AddRange(branches);
         db.SaveChanges();
 
-        // Slots start next Monday, UTC, so a fresh clone always shows future dates.
         var nextMonday = NextWeekday(DateTime.UtcNow.Date, DayOfWeek.Monday);
         var slots = new List<Slot>();
-
         foreach (var branch in branches)
         {
             for (var day = 0; day < 14; day++)
             {
                 var date = nextMonday.AddDays(day);
                 if (date.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday) continue;
-
                 foreach (var serviceType in ServiceTypes)
                     foreach (var time in DailyTimes)
                         slots.Add(new Slot
@@ -49,15 +47,30 @@ public static class BookingSeeder
                         });
             }
         }
-
         db.Slots.AddRange(slots);
 
         db.Citizens.AddRange(
-            new CitizenAccount { FullName = "Thandi Mokoena", IdNumber = "9001015800081", CellNumber = "0821110001" },
-            new CitizenAccount { FullName = "Sipho Ndlovu", IdNumber = "8802025800082", CellNumber = "0821110002" },
-            new CitizenAccount { FullName = "Anele Dlamini", IdNumber = "9203035800083", CellNumber = "0821110003" });
+            Account(hasher, "Thandi Mokoena", "9001015800081", "0821110001", "1P@ssword", "Citizen"),
+            Account(hasher, "Sipho Ndlovu", "8802025800082", "0821110002", "1P@ssword", "Citizen"),
+            Account(hasher, "Anele Dlamini", "9203035800083", "0821110003", "1P@ssword", "Citizen"),
+            Account(hasher, "Demo Official", "7001015800080", "0821110099", "Official123!", "Official"));
 
         db.SaveChanges();
+    }
+
+    private static CitizenAccount Account(
+        IPasswordHasher hasher, string name, string id, string cell, string password, string role)
+    {
+        var (hash, salt) = hasher.Create(password);
+        return new CitizenAccount
+        {
+            FullName = name,
+            IdNumber = id,
+            CellNumber = cell,
+            Role = role,
+            PasswordHash = hash,
+            PasswordSalt = salt
+        };
     }
 
     private static DateTime NextWeekday(DateTime from, DayOfWeek target)
