@@ -67,4 +67,12 @@ public sealed class BookingApiClient : IBookingApiClient
     public async Task<IReadOnlyList<AccessLogEntryDto>> GetAccessLogAsync(int citizenId, CancellationToken ct) =>
     await _http.GetFromJsonAsync<IReadOnlyList<AccessLogEntryDto>>(
         $"api/access-log/citizen/{citizenId}", ct) ?? Array.Empty<AccessLogEntryDto>();
+
+    public async Task<CitizenDto?> GetCitizenByIdNumberAsync(string idNumber, CancellationToken ct)
+    {
+        var response = await _http.GetAsync($"api/citizens/by-id-number/{idNumber}", ct);
+        if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return null;
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<CitizenDto>(cancellationToken: ct);
+    }
 }

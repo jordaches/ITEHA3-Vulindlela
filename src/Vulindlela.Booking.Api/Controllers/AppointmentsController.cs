@@ -67,6 +67,7 @@ public class AppointmentsController : ControllerBase
             CitizenAccountId = citizenAccountId,
             AccessedByCitizenId = User.GetCitizenId(),
             AccessedByRole = User.GetRole() ?? "System",
+            AccessedByName = User.Identity?.Name ?? "System",
             AccessedAtUtc = DateTime.UtcNow,
             Action = "View Appointments"
         };

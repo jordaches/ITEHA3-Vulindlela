@@ -29,6 +29,11 @@ public sealed class IdentityForwardingHandler : DelegatingHandler
             var role = user.GetRole();
             if (!string.IsNullOrEmpty(role))
                 request.Headers.TryAddWithoutValidation(PortalHeaderDefaults.RoleHeader, role);
+
+            var name = user.Identity?.Name;
+            if (!string.IsNullOrEmpty(name))
+                request.Headers.TryAddWithoutValidation(PortalHeaderDefaults.CitizenNameHeader, name);
+
         }
 
         return base.SendAsync(request, cancellationToken);

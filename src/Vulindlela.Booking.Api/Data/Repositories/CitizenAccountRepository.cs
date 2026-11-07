@@ -14,5 +14,8 @@ namespace Vulindlela.Booking.Api.Data.Repositories
 
         public async Task<IReadOnlyList<CitizenAccount>> GetAllAsync(CancellationToken ct) =>
             await _db.Citizens.OrderBy(c => c.Id).ToListAsync(ct);
+
+        public Task<CitizenAccount?> GetByIdNumberAsync(string idNumber, CancellationToken ct) =>
+            _db.Citizens.FirstOrDefaultAsync(c => c.IdNumber == idNumber, ct);
     }
 }

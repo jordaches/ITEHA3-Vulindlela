@@ -51,11 +51,26 @@ public sealed class PortalHeaderAuthenticationHandler : AuthenticationHandler<Po
         if (role != PortalHeaderDefaults.CitizenRole && role != PortalHeaderDefaults.OfficialRole)
             return Task.FromResult(AuthenticateResult.Fail("Invalid role header."));
 
-        return Task.FromResult(Success(new[]
+        /*return Task.FromResult(Success(new[]
         {
             new Claim(ClaimTypes.NameIdentifier, citizenId.ToString()),
             new Claim(ClaimTypes.Role, role)
-        }));
+        }));*/
+
+        var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.NameIdentifier, citizenId.ToString()),
+            new Claim(ClaimTypes.Role, role)
+        };
+
+        if (Request.Headers.TryGetValue(PortalHeaderDefaults.CitizenNameHeader, out var nameValues))
+        {
+            var name = nameValues.ToString();
+            if (!string.IsNullOrEmpty(name))
+                claims.Add(new Claim(ClaimTypes.Name, name));
+        }
+
+        return Task.FromResult(Success(claims));
     }
 
     private AuthenticateResult Success(IEnumerable<Claim> claims)

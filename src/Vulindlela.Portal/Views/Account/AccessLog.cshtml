@@ -22,6 +22,7 @@ else
                 <th>Service</th>
                 <th>Action</th>
                 <th>Accessed By</th>
+                <th>Accessed By (Name)</th>
                 <th>Resource</th>
             </tr>
         </thead>
@@ -38,6 +39,10 @@ else
                     {
                         <span class="text-muted">(#@entry.AccessedByCitizenId)</span>
                     }
+                </td>
+                <td>
+                    @entry.AccessedByName
+                    <span class="text-muted small">(@entry.AccessedByRole)</span>
                 </td>
                 <td>@entry.ResourceId</td>
             </tr>

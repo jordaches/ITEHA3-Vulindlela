@@ -29,11 +29,11 @@
 @if (User.IsInRole("Official"))
 {
     <form method="get" asp-action="ForCitizen" class="row g-2 mb-4 col-md-6">
-        <div class="col-md-6">
-            <input type="number" name="id" class="form-control" placeholder="Citizen id" required />
+        <div class="col-md-8">
+            <input type="text" name="idNumber" class="form-control" placeholder="Citizen ID Number (e.g. 9001015800081)" required />
         </div>
-        <div class="col-md-6">
-            <button class="btn btn-outline-secondary">View another citizen's appointments</button>
+        <div class="col-md-4">
+            <button class="btn btn-outline-secondary w-100">View appointments</button>
         </div>
     </form>
 }

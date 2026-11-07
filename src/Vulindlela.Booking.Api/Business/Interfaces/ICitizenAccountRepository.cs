@@ -6,5 +6,7 @@ namespace Vulindlela.Booking.Api.Business.Interfaces
     {
         Task<CitizenAccount?> GetByIdAsync(int id, CancellationToken ct);
         Task<IReadOnlyList<CitizenAccount>> GetAllAsync(CancellationToken ct);
+
+        Task<CitizenAccount?> GetByIdNumberAsync(string idNumber, CancellationToken ct);
     }
 }

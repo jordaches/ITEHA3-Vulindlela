@@ -69,6 +69,7 @@ public class ClearanceController : ControllerBase
             CitizenAccountId = record.Value.CitizenAccountId,
             AccessedByCitizenId = User.GetCitizenId(),
             AccessedByRole = User.GetRole() ?? "System",
+            AccessedByName = User.Identity?.Name ?? "System",
             AccessedAtUtc = DateTime.UtcNow,
             Action = "View Clearance Status",
             ResourceId = appointmentId.ToString()

@@ -78,6 +78,7 @@ public class BookingDbContext : DbContext
             e.Property(x => x.AccessedByRole).HasMaxLength(16).IsRequired();
             e.Property(x => x.Action).HasMaxLength(64).IsRequired();
             e.Property(x => x.ResourceId).HasMaxLength(64);
+            e.Property(x => x.AccessedByName).HasMaxLength(128).IsRequired();
             e.HasIndex(x => x.CitizenAccountId);
         });
     }

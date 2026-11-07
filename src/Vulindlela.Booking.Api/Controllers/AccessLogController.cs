@@ -33,6 +33,7 @@ public class AccessLogController : ControllerBase
             l.AccessedAtUtc,
             l.AccessedByRole,
             l.AccessedByCitizenId,
+            l.AccessedByName,
             l.Action,
             l.ResourceId)));
     }

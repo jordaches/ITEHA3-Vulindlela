@@ -5,5 +5,6 @@ public sealed record AccessLogEntryDto(
     DateTime AccessedAtUtc,
     string AccessedByRole,
     int? AccessedByCitizenId,
+    string? AccessedByName,
     string Action,
     string? ResourceId);

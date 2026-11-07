@@ -59,6 +59,7 @@ public class ClearanceDbContext : DbContext
             e.Property(x => x.AccessedByRole).HasMaxLength(16).IsRequired();
             e.Property(x => x.Action).HasMaxLength(64).IsRequired();
             e.Property(x => x.ResourceId).HasMaxLength(64);
+            e.Property(x => x.AccessedByName).HasMaxLength(256);
             e.HasIndex(x => x.CitizenAccountId);
         });
     }

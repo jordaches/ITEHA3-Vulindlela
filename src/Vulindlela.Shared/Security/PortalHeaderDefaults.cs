@@ -12,4 +12,5 @@ public static class PortalHeaderDefaults
     public const string CitizenRole = "Citizen";
     public const string OfficialRole = "Official";
     public const string SystemRole = "System";   // the Portal when no citizen is signed in
+    public const string CitizenNameHeader = "X-Citizen-Name";
 }

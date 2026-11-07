@@ -12,4 +12,6 @@ public interface IBookingApiClient
     Task<IReadOnlyList<AppointmentDto>> GetAppointmentsForCitizenAsync(int citizenId, CancellationToken ct);
 
     Task<IReadOnlyList<AccessLogEntryDto>> GetAccessLogAsync(int citizenId, CancellationToken ct);
+
+    Task<CitizenDto?> GetCitizenByIdNumberAsync(string idNumber, CancellationToken ct);
 }

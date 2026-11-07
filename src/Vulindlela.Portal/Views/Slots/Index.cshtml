@@ -1,9 +1,11 @@
 ﻿@model IReadOnlyList<Vulindlela.Shared.Contracts.BranchDto>
-@{
-    ViewData["Title"] = "Branches";
-}
+@{ ViewData["Title"] = "Branches"; }
 
 <h1>Branches</h1>
+
+<div class="alert alert-info">
+    <strong>Note:</strong> Branches are only open on weekdays (Monday to Friday). Weekend bookings are not available.
+</div>
 
 @if (TempData["Error"] is string err)
 {
@@ -22,7 +24,7 @@
     </div>
     <div class="col-md-3">
         <label class="form-label">Date</label>
-        <input type="date" name="date" class="form-control" required
+        <input type="date" name="date" id="dateInput" class="form-control" required
                value="@DateTime.UtcNow.AddDays(7).ToString("yyyy-MM-dd")" />
     </div>
     <div class="col-md-3">
@@ -42,3 +44,20 @@
         <button class="btn btn-primary w-100">Search</button>
     </div>
 </form>
+
+@section Scripts {
+    <script>
+        document.getElementById('dateInput').addEventListener('change', function (e) {
+            if (!this.value) return;
+            // Parse as UTC to avoid timezone shifting the day of the week
+            const parts = this.value.split('-');
+            const date = new Date(Date.UTC(parts[0], parts[1] - 1, parts[2]));
+            const day = date.getUTCDay(); // 0 is Sunday, 6 is Saturday
+            
+            if (day === 0 || day === 6) {
+                alert("Branches are closed on weekends. Please select a weekday.");
+                this.value = ''; // clear the invalid selection
+            }
+        });
+    </script>
+}
