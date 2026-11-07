@@ -30,6 +30,9 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-controller="Appointments" asp-action="Mine">My appointments</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Account" asp-action="AccessLog">My Access Log</a>
+                            </li>
                             @if (User.IsInRole("Official"))
                             {
                                 <li class="nav-item">

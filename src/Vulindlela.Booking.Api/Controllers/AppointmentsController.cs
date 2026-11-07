@@ -15,12 +15,16 @@ public class AppointmentsController : ControllerBase
     private readonly IBookingService _bookings;
     private readonly IAuthorizationService _authorization;
 
+    private readonly IAccessLogRepository _logs;
+
     public AppointmentsController(
         IBookingService bookings,
-        IAuthorizationService authorization)
+        IAuthorizationService authorization,
+        IAccessLogRepository logs)
     {
         _bookings = bookings;
         _authorization = authorization;
+        _logs = logs;
     }
 
     [HttpPost]
@@ -57,6 +61,16 @@ public class AppointmentsController : ControllerBase
         var auth = await _authorization.AuthorizeAsync(
             User, citizenAccountId, PortalHeaderDefaults.CitizenCanAccessOwnRecordPolicy);
         if (!auth.Succeeded) return Forbid();
+
+        var log = new Vulindlela.Booking.Api.Data.Entities.BookingAccessLog
+        {
+            CitizenAccountId = citizenAccountId,
+            AccessedByCitizenId = User.GetCitizenId(),
+            AccessedByRole = User.GetRole() ?? "System",
+            AccessedAtUtc = DateTime.UtcNow,
+            Action = "View Appointments"
+        };
+        await _logs.AddAsync(log, ct);
 
         return Ok(await _bookings.GetForCitizenAsync(citizenAccountId, ct));
     }

@@ -14,11 +14,13 @@ public class ClearanceController : ControllerBase
     private readonly ISubmissionService _submissions;
 
     private readonly IAuthorizationService _authorization;
+    private readonly IClearanceAccessLogRepository _logs;
 
-    public ClearanceController(ISubmissionService submissions,IAuthorizationService authorization)
+    public ClearanceController(ISubmissionService submissions,IAuthorizationService authorization, IClearanceAccessLogRepository logs)
     {
         _submissions = submissions;
         _authorization = authorization;
+        _logs = logs;
     }
 
     /// <summary>Booking calls this when an appointment is created (Phase C wires it up).</summary>
@@ -61,6 +63,17 @@ public class ClearanceController : ControllerBase
         var auth = await _authorization.AuthorizeAsync(
             User, record.Value.CitizenAccountId, PortalHeaderDefaults.CitizenCanAccessOwnRecordPolicy);
         if (!auth.Succeeded) return Forbid();
+
+        var log = new Vulindlela.Clearance.Api.Data.Entities.ClearanceAccessLog
+        {
+            CitizenAccountId = record.Value.CitizenAccountId,
+            AccessedByCitizenId = User.GetCitizenId(),
+            AccessedByRole = User.GetRole() ?? "System",
+            AccessedAtUtc = DateTime.UtcNow,
+            Action = "View Clearance Status",
+            ResourceId = appointmentId.ToString()
+        };
+        await _logs.AddAsync(log, ct);
 
         return Ok(dto);
     }

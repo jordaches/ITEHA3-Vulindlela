@@ -27,6 +27,7 @@ builder.Services.AddSingleton<IClock, SystemClock>();
 builder.Services.AddSingleton<IFeeCalculator, FeeCalculator>();
 builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<ISlotService, SlotService>();
+builder.Services.AddScoped<IAccessLogRepository, AccessLogRepository>();
 
 builder.Services.AddHttpClient<IClearanceClient, ClearanceClient>(http =>
 {

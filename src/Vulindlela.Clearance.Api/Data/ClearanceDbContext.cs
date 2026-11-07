@@ -13,6 +13,8 @@ public class ClearanceDbContext : DbContext
     public DbSet<SubmittedDocument> SubmittedDocuments => Set<SubmittedDocument>();
     public DbSet<MissingDocument> MissingDocuments => Set<MissingDocument>();
 
+    public DbSet<ClearanceAccessLog> AccessLogs => Set<ClearanceAccessLog>();
+
     protected override void OnModelCreating(ModelBuilder b)
     {
         b.Entity<DocumentRule>(e =>
@@ -50,6 +52,14 @@ public class ClearanceDbContext : DbContext
             e.Property(x => x.Reason).HasMaxLength(256).IsRequired();
             e.HasOne(x => x.ClearanceStatus).WithMany(x => x.MissingDocuments)
              .HasForeignKey(x => x.ClearanceStatusId).OnDelete(DeleteBehavior.Cascade);
+        });
+
+        b.Entity<ClearanceAccessLog>(e =>
+        {
+            e.Property(x => x.AccessedByRole).HasMaxLength(16).IsRequired();
+            e.Property(x => x.Action).HasMaxLength(64).IsRequired();
+            e.Property(x => x.ResourceId).HasMaxLength(64);
+            e.HasIndex(x => x.CitizenAccountId);
         });
     }
 }

@@ -10,4 +10,6 @@ public interface IBookingApiClient
     Task<(AppointmentDto? Appointment, string? Error)> BookAsync(
     BookAppointmentRequest request, CancellationToken ct);
     Task<IReadOnlyList<AppointmentDto>> GetAppointmentsForCitizenAsync(int citizenId, CancellationToken ct);
+
+    Task<IReadOnlyList<AccessLogEntryDto>> GetAccessLogAsync(int citizenId, CancellationToken ct);
 }

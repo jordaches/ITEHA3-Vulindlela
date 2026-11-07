@@ -1,15 +1,24 @@
-﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using Vulindlela.Portal.Clients;
+using Vulindlela.Portal.ViewModels;
+using Vulindlela.Shared.Contracts;
+using Vulindlela.Shared.Security;
 
 namespace Vulindlela.Portal.Controllers;
 
 public class AccountController : Controller
 {
     private readonly IBookingApiClient _booking;
-    public AccountController(IBookingApiClient booking) => _booking = booking;
+    private readonly IClearanceApiClient _clearance;
+    public AccountController(IBookingApiClient booking, IClearanceApiClient clearance)
+    {
+        _booking = booking;
+        _clearance = clearance;
+    }
 
     [HttpGet]
     public IActionResult SignIn(string? returnUrl = null)
@@ -57,4 +66,38 @@ public class AccountController : Controller
         !string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl)
             ? Redirect(returnUrl)
             : RedirectToAction("Index", "Home");
+
+
+
+    [Authorize]
+    [HttpGet]
+    public async Task<IActionResult> AccessLog(int? id, CancellationToken ct)
+    {
+        var currentId = User.GetCitizenId();
+        if (currentId is null) return Challenge();
+
+        var targetId = id ?? currentId.Value;
+        IReadOnlyList<AccessLogEntryDto> bookingLogs = Array.Empty<AccessLogEntryDto>();
+        IReadOnlyList<AccessLogEntryDto> clearanceLogs = Array.Empty<AccessLogEntryDto>();
+        string? error = null;
+
+        try
+        {
+            var bTask = _booking.GetAccessLogAsync(targetId, ct);
+            var cTask = _clearance.GetAccessLogAsync(targetId, ct);
+            await Task.WhenAll(bTask, cTask);
+            bookingLogs = await bTask;
+            clearanceLogs = await cTask;
+        }
+        catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException)
+        {
+            error = "Some access logs are temporarily unavailable.";
+        }
+
+        var combined = bookingLogs.Concat(clearanceLogs)
+            .OrderByDescending(x => x.AccessedAtUtc)
+            .ToList();
+
+        return View(new AccessLogViewModel(targetId, combined, error));
+    }
 }

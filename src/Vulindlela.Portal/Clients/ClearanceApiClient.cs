@@ -40,4 +40,8 @@ public sealed class ClearanceApiClient : IClearanceApiClient
             return (id, null);
         }
     }
+
+    public async Task<IReadOnlyList<AccessLogEntryDto>> GetAccessLogAsync(int citizenId, CancellationToken ct) =>
+            await _http.GetFromJsonAsync<IReadOnlyList<AccessLogEntryDto>>(
+                $"api/clearance/access-log/citizen/{citizenId}", ct) ?? Array.Empty<AccessLogEntryDto>();
 }

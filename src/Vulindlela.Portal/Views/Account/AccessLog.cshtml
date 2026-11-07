@@ -1,0 +1,47 @@
+﻿@model Vulindlela.Portal.ViewModels.AccessLogViewModel
+@{ ViewData["Title"] = "My Access Log"; }
+
+<h1>Access Log for Citizen #@Model.CitizenId</h1>
+<p class="text-muted">Every time your record is viewed by a citizen or an official, it is logged here.</p>
+
+@if (Model.Error is not null)
+{
+    <div class="alert alert-warning">@Model.Error</div>
+}
+
+@if (Model.Entries.Count == 0)
+{
+    <p>No access records found.</p>
+}
+else
+{
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Timestamp (UTC)</th>
+                <th>Service</th>
+                <th>Action</th>
+                <th>Accessed By</th>
+                <th>Resource</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var entry in Model.Entries)
+        {
+            <tr>
+                <td>@entry.AccessedAtUtc.ToString("u")</td>
+                <td>@entry.Service</td>
+                <td>@entry.Action</td>
+                <td>
+                    @entry.AccessedByRole
+                    @if (entry.AccessedByCitizenId.HasValue)
+                    {
+                        <span class="text-muted">(#@entry.AccessedByCitizenId)</span>
+                    }
+                </td>
+                <td>@entry.ResourceId</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}

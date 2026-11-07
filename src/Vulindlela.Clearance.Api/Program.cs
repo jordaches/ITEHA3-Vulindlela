@@ -20,6 +20,7 @@ builder.Services.AddScoped<IDocumentRuleRepository, DocumentRuleRepository>();
 builder.Services.AddScoped<IClearanceStatusRepository, ClearanceStatusRepository>();
 builder.Services.AddScoped<ISubmissionRepository, SubmissionRepository>();
 builder.Services.AddScoped<IUnitOfWork, ClearanceUnitOfWork>();
+builder.Services.AddScoped<IClearanceAccessLogRepository, ClearanceAccessLogRepository>();
 
 // Business
 builder.Services.AddSingleton<IClock, SystemClock>();

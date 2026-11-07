@@ -14,6 +14,8 @@ public class BookingDbContext : DbContext
 
     public DbSet<NotificationOutbox> Outbox => Set<NotificationOutbox>();
 
+    public DbSet<BookingAccessLog> AccessLogs => Set<BookingAccessLog>();
+
     protected override void OnModelCreating(ModelBuilder b)
     {
         b.Entity<Branch>(e =>
@@ -69,6 +71,14 @@ public class BookingDbContext : DbContext
 
             // Indexes for the dispatcher's polling query.
             e.HasIndex(x => new { x.SentAtUtc, x.NextAttemptAtUtc });
+        });
+
+        b.Entity<BookingAccessLog>(e =>
+        {
+            e.Property(x => x.AccessedByRole).HasMaxLength(16).IsRequired();
+            e.Property(x => x.Action).HasMaxLength(64).IsRequired();
+            e.Property(x => x.ResourceId).HasMaxLength(64);
+            e.HasIndex(x => x.CitizenAccountId);
         });
     }
 }

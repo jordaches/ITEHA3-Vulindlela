@@ -63,4 +63,8 @@ public sealed class BookingApiClient : IBookingApiClient
         int citizenId, CancellationToken ct) =>
         await _http.GetFromJsonAsync<IReadOnlyList<AppointmentDto>>(
             $"api/appointments/citizen/{citizenId}", ct) ?? Array.Empty<AppointmentDto>();
+
+    public async Task<IReadOnlyList<AccessLogEntryDto>> GetAccessLogAsync(int citizenId, CancellationToken ct) =>
+    await _http.GetFromJsonAsync<IReadOnlyList<AccessLogEntryDto>>(
+        $"api/access-log/citizen/{citizenId}", ct) ?? Array.Empty<AccessLogEntryDto>();
 }
