@@ -49,7 +49,7 @@ namespace Vulindlela.Booking.Api.Data.Repositories
                 a.Slot.StartsAtUtc < end, ct);
         }
 
-        // SQLITE_CONSTRAINT = 19. Also covers the (vanishingly unlikely) Reference
+        // SQLITE_CONSTRAINT = 19. Also covers the Reference
         // collision; both mean "this insert would break a unique index".
         private static bool IsUniqueViolation(DbUpdateException ex) =>
             ex.InnerException is SqliteException { SqliteErrorCode: 19 };
@@ -68,7 +68,6 @@ namespace Vulindlela.Booking.Api.Data.Repositories
             }
             catch (DbUpdateException ex) when (IsUniqueViolation(ex))
             {
-                // Leave the context usable; detach everything we added.
                 _db.Entry(appointment).State = EntityState.Detached;
                 _db.Entry(notification).State = EntityState.Detached;
                 throw new DuplicateSlotException(appointment.SlotId);

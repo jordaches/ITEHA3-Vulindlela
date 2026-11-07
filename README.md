@@ -98,9 +98,9 @@ While the system is running, stop the Clearance service (Ctrl+C in its terminal 
 and click "My Appointments". The page will still load, show the booking, and display a yellow warning banner. It will not crash.
 
 ### 4. Policy-Based Authorisation & The Audit Log:
-Sign in as Thandi, view your appointments, and check "My Access Log". You will see yourself. Sign out and sign in as the Official. 
-View Thandi's appointments using her ID number. Sign back in as Thandi and look at your 
-Access Log again—you will see that the Official looked at your file, exactly when, and why.
+Sign in as Queen, view your appointments, and check "My Access Log". You will see yourself. Sign out and sign in as the Official. 
+View Queen's appointments using her ID number. Sign back in as Queen and look at your 
+Access Log again—you will see that the Official looked at your file, exactly when, and which file.
 
 ## Known Limitations
 Here is what Phase 1 does not do:

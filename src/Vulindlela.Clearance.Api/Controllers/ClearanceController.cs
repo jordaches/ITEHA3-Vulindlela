@@ -23,7 +23,7 @@ public class ClearanceController : ControllerBase
         _logs = logs;
     }
 
-    /// <summary>Booking calls this when an appointment is created (Phase C wires it up).</summary>
+    /// Booking calls this when an appointment is created.
     [Authorize(Roles = "System")] 
     [HttpPost("appointments")]
     public async Task<IActionResult> Register(

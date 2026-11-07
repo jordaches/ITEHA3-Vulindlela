@@ -8,7 +8,7 @@
         public DateTime StartsAtUtc { get; set; }
         public string ServiceType { get; set; } = string.Empty;
 
-        // Navigation only. Existence of an Appointment row IS the booking state.
+        // Navigation only. Existence of an Appointment row is the booking state.
         public Appointment? Appointment { get; set; }
     }
 }

@@ -43,7 +43,7 @@ namespace Vulindlela.Clearance.Api.Business
             var status = new ClearanceStatus
             {
                 AppointmentId = req.AppointmentId,
-                CitizenAccountId = req.CitizenAccountId,     // NEW
+                CitizenAccountId = req.CitizenAccountId,
                 ServiceType = req.ServiceType,
                 State = state,
                 CreatedAtUtc = _clock.UtcNow,

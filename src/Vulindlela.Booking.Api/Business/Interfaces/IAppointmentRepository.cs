@@ -4,7 +4,7 @@ namespace Vulindlela.Booking.Api.Business.Interfaces
 {
     public interface IAppointmentRepository
     {
-        /// <summary>Throws <see cref="DuplicateSlotException"/> if the slot is already taken.</summary>
+        ///Throws <see cref="DuplicateSlotException"/> if the slot is already taken.
         Task AddAsync(Appointment appointment, CancellationToken ct);
         Task<Appointment?> GetByIdAsync(int id, CancellationToken ct);
         Task<IReadOnlyList<Appointment>> GetForCitizenAsync(int citizenAccountId, CancellationToken ct);

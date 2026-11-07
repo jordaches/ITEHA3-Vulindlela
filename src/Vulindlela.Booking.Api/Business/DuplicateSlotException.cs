@@ -1,10 +1,10 @@
 ﻿namespace Vulindlela.Booking.Api.Business;
 
-/// <summary>
+
 /// Raised when the database refuses a second appointment for the same slot.
 /// Deliberately a business-layer type: the business layer must not know about
 /// SqliteException or EF Core. The repository translates.
-/// </summary>
+
 public sealed class DuplicateSlotException : Exception
 {
     public int SlotId { get; }

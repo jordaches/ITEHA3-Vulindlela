@@ -71,7 +71,7 @@ public sealed class OutboxDispatcher : BackgroundService
             }
             catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or InvalidOperationException)
             {
-                // The Clearance service is down or unreachable. Retry with exponential backoff.
+                // The Clearance service is down or unreachable. Retry with increasing backoff.
                 var seconds = Math.Min(MaxBackoff.TotalSeconds,
                     PollInterval.TotalSeconds * Math.Pow(2, item.AttemptCount));
                 var next = clock.UtcNow.AddSeconds(seconds);

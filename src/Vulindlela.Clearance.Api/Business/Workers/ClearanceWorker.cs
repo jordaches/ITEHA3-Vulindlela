@@ -6,7 +6,7 @@ namespace Vulindlela.Clearance.Api.Business.Workers;
 public sealed class ClearanceWorker : BackgroundService
 {
     private readonly IDocumentQueue _queue;
-    private readonly IServiceScopeFactory _scopeFactory;   // NOT ISubmissionRepository — see ADR-style note below
+    private readonly IServiceScopeFactory _scopeFactory;
     private readonly ILogger<ClearanceWorker> _log;
 
     public ClearanceWorker(
